@@ -13,3 +13,4 @@ screenshots
 *.ntvs*
 *.njsproj
 *.sln
+/.vs

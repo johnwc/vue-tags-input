@@ -49,7 +49,7 @@ export default {
    * @model
    * @default ''
    */
-  value: {
+  modelValue: {
     type: String,
     default: '',
     required: true,
