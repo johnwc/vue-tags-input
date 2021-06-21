@@ -1,5 +1,5 @@
 import 'normalize-css';
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { format, mergeDocs } from './docs-formatter';
@@ -14,8 +14,6 @@ const props = require('!!./docs-loader!../vue-tags-input/vue-tags-input.props.js
 const merged = mergeDocs(props, docs);
 window.docs = format(merged);
 
-new Vue({
-  el: '#app',
-  render: h => h(App),
-  router,
-});
+const app = createApp(App);
+app.use(router);
+app.mount('#app');

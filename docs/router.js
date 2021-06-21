@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 import ToDevelop from './pages/to-develop';
 import ProjectFeatures from './pages/project-features';
 import GettingStarted from './pages/getting-started';
@@ -8,8 +7,6 @@ import examples from './pages/examples';
 import e2eSuite from '../e2e/suite/';
 import Changelog from './pages/changelog';
 import Migration from './pages/migration';
-
-Vue.use(Router);
 
 const routes = [{
   path: '/',
@@ -39,6 +36,7 @@ const routes = [{
   component: ToDevelop,
 }];
 
-const router = new Router({ routes });
-
-export default router;
+export default createRouter({
+    history: createWebHistory(),
+    routes: routes,
+});

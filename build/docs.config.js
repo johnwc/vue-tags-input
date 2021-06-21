@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require("vue-loader");
 const ip = require('ip');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
@@ -12,9 +12,13 @@ const mode = process.env.NODE_ENV === 'development' ? 'development' : 'productio
 const resolve = src => path.resolve(__dirname, src);
 const port = 3000;
 
-module.exports = {
-    mode,
-    entry: ['@babel/polyfill', resolve('../docs/main.js')],
+module.exports = (env = {}) => ({
+    mode: env.prod ? "production" : "development",
+    devtool: env.prod ? "source-map" : "eval-cheap-module-source-map",
+    entry: [
+        '@babel/polyfill',
+        resolve('../docs/main.js'),
+    ],
     output: {
         path: resolve('../docs-dist'),
         filename: '[name].[hash].js',
@@ -27,7 +31,7 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
+                use: "vue-loader"
             },
             {
                 test: /\.js$/,
@@ -110,11 +114,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: resolve('../docs/index.html'),
         }),
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(mode),
-            },
-        }),
     ],
     resolve: {
         extensions: ['.js', '.vue'],
@@ -123,7 +122,7 @@ module.exports = {
             '@johmun/vue-tags-input': resolve('../vue-tags-input/vue-tags-input.vue'),
             '@tag-input': resolve('../vue-tags-input/tag-input.vue'),
             'colors': resolve('../docs/colors.scss'),
-            'vue$': 'vue/dist/vue.esm.js',
+            vue: "@vue/runtime-dom",
         },
     },
     devServer: {
@@ -140,7 +139,6 @@ module.exports = {
     performance: {
         hints: false,
     },
-    devtool: 'eval-source-map',
     optimization: {
         splitChunks: {
             cacheGroups: {
@@ -152,10 +150,9 @@ module.exports = {
             },
         },
     },
-};
+});
 
-if (mode === 'production') {
-  module.exports.devtool = 'source-map';
+if (process.env.prod) {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.LoaderOptionsPlugin({ minimize: true }),
   ]);
